@@ -341,6 +341,9 @@ class ArtificialRandom(HypothesisRandom):
 
     def seed(self, a=None, version=2):
         check_seed(a)
+        if isinstance(a, bytearray):
+            # Random.seed() accepts a bytearray, but seeds are dict keys here
+            a = bytes(a)
         self.__state = state_for_seed(self.__data, a)
 
     def getstate(self):

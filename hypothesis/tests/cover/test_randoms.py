@@ -195,6 +195,16 @@ def test_seed_accepts_same_arguments_as_random_seed(use_true_random, data):
         r1.seed()
 
 
+@pytest.mark.parametrize("use_true_random", [False, True])
+@given(data=st.data())
+def test_seeding_with_bytearray_matches_bytes(use_true_random, data):
+    r1 = data.draw(st.randoms(use_true_random=use_true_random))
+    r2 = data.draw(st.randoms(use_true_random=use_true_random))
+    r1.seed(bytearray(b"seed"))
+    r2.seed(b"seed")
+    assert r1.random() == r2.random()
+
+
 @given(any_random, any_call())
 def test_copying_synchronizes(r1, method_call):
     method, args, kwargs = method_call
